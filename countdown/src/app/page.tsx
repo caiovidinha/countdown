@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import JSConfetti from 'js-confetti'
 
 export default function Home() {
 
@@ -8,13 +9,33 @@ export default function Home() {
 	const [hours, setHours] = useState(0)
 	const [minutes, setMinutes] = useState(0)
 	const [seconds, setSeconds] = useState(0)
+	const [isToday, setIsToday] = useState(false)
 
+	
+
+	const checkToday = () => {
+		const target = new Date("12/31/2023 20:00:00").toDateString()
+		const today = new Date().toDateString()
+		if(target == today) setIsToday(true)
+		// setIsToday(true)
+		
+	}
 
 	useEffect(() => {
+		const jsconfetti = new JSConfetti()
+		checkToday()
+		const interval = setInterval(() => {
+			if(isToday) jsconfetti.addConfetti()
+		},1000)
+		
+	}, [isToday])
 
+	useEffect(() => {
 		const target = new Date("12/31/2023 20:00:00")
 
-		const interval = setInterval(() => {
+
+		const interval = setInterval(() => {	
+
 			const now = new Date()
 			const difference = target.getTime() - now.getTime()
 
@@ -35,6 +56,7 @@ export default function Home() {
 	}, [])
 	return (
 		<main className='h-screen flex flex-col items-center justify-center bg-amber-50'>
+			<canvas id="canvas"></canvas>
 				<Image 
 				className='absolute top-[22%]'
 				src='/logo-anonovo.png'

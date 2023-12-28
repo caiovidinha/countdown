@@ -17,17 +17,15 @@ export default function Home() {
 		const target = new Date("12/31/2023 20:00:00").toDateString()
 		const today = new Date().toDateString()
 		if(target == today) setIsToday(true)
-		// setIsToday(true)
-		
+
 	}
 
 	useEffect(() => {
 		const jsconfetti = new JSConfetti()
 		checkToday()
-		const interval = setInterval(() => {
+		setInterval(() => {
 			if(isToday) jsconfetti.addConfetti()
 		},1000)
-		
 	}, [isToday])
 
 	useEffect(() => {
@@ -38,18 +36,23 @@ export default function Home() {
 
 			const now = new Date()
 			const difference = target.getTime() - now.getTime()
+			if(difference <= 0){
+				setDays(0)
+				setHours(0)
+				setMinutes(0)
+				setSeconds(0)
+			}else {			
+				const d = Math.floor(difference / (1000 * 60 * 60 * 24))
+				setDays(d)
 
-			const d = Math.floor(difference / (1000 * 60 * 60 * 24))
-			setDays(d)
+				const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+				setHours(h)
 
-			const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-			setHours(h)
+				const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+				setMinutes(m)
 
-			const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
-			setMinutes(m)
-
-			const s = Math.floor((difference % (1000 * 60)) / 1000)
-			setSeconds(s)
+				const s = Math.floor((difference % (1000 * 60)) / 1000)
+				setSeconds(s)}
 		}, 1000)
 
 		return () => clearInterval(interval)
